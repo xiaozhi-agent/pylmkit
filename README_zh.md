@@ -1,30 +1,30 @@
 # PyLMKit
 
-[中文版](https://github.com/52phm/pylmkit/blob/main/README_zh.md)
+**pylmkit** 是一个旨在构建或集成具有实际价值的大模型（LM）应用程序的项目，旨在帮助用户快速构建符合其业务需求的应用程序。
 
-**pylmkit** is a project aimed at building or integrating Large Model (LM) applications with practical value. It is designed to assist users in quickly constructing applications tailored to their own business needs.
 
-## Quick Install
+## 快速安装
 ```bash
 pip install -U pylmkit
 ```
 
-## Document
+## 文档
 
 - [English document](http://en.pylmkit.cn)
 - [中文文档](http://zh.pylmkit.cn)
 
 
-## Functionality
+## 功能
 
-- RolePlay：By setting up role templates and combining online search, memory, and knowledge base functionalities, we achieve typical conversational applications.
-- Other features are constantly being updated...
+- 角色扮演：通过设置角色模板并结合在线搜索、记忆和知识库功能，实现了典型的对话类的功能应用。
+- 其他功能也在不断更新……
 
-## QuickStart
+## 快速开始
 
-**Set API KEY**
+**设置 API KEY**
 
-- A convenient method is to create a new .env file and configure all API key information within it, enabling easy utilization of different models. The format of the .env file is as follows:
+- 一个方便的方法是创建一个新的.env文件，并在其中配置所有的API密钥信息，从而方便地使用不同的模型。.env文件的格式如下：
+
 ```text
 # OpenAI
 openai_api_key = ""
@@ -54,14 +54,14 @@ hunyuan_app_id = ""
 hunyuan_secret_id = ""
 hunyuan_secret_key = ""
 ```
-The method to load the .env file is as follows (it is recommended to place the .env file in the same path as your running .py file).
+加载.env文件的方法如下（建议将.env文件放置在与您运行的.py文件相同的路径下）。
 ```python
 from dotenv import load_dotenv
 
 # load .env
 load_dotenv()
 ```
-- Another method is to configure it through os.environ. Here's an example.
+- 另一种方法是通过os.environ进行配置，下面是一个例子：
 ```python
 import os
 
@@ -74,7 +74,7 @@ os.environ['qianfan_ak'] = ""
 os.environ['qianfan_sk'] = ""
 ```
 
-**A demo running in Python.**
+**在Python中运行Demo**
 ```python
 from dotenv import load_dotenv
 from pylmkit.app import RolePlay
@@ -116,9 +116,9 @@ while True:
     
 
 ```
-- llm model
+- llm模型
 
-The LLM model can be imported using `PyLMKit` and also supports importing models with `LangChain`. Importing other models:
+LLM模型可以使用`PyLMKit`导入，也支持使用`LangChain`导入模型。导入其他模型例子:
 
 ```python
 from pylmkit.llms import ChatQianfan  # 百度-千帆
@@ -130,18 +130,17 @@ from pylmkit.llms import ChatTongyi  # 阿里-通义
 
 ```
 
-- role template
+- 角色模板
 
-Users can adjust the role template according to their own circumstances. In the template, `{memory}` represents the location where context memories are placed, `{search}` represents the content of the search engine, and `{query}` represents the user's input question.
+用户可根据自身情况调整角色模板。在模板中，`{memory}` 表示上下文记忆的位置，`{search}` 表示搜索引擎的内容，`{query}` 表示用户输入的问题。
 
-- return
+- 返回值
 
-The algorithm returns two values: "response" and "refer." The "response" represents the content returned, while "refer" refers to the citation information, such as the webpage citation when using a search engine.
+该算法返回两个值:“response”和“reference”。“response”表示返回的内容，“reference”表示引用信息，例如使用搜索引擎时对网页的引用。
 
+**在Streamlit web中运行Demo**
 
-**Running in the Streamlit web**
-
-- step1: Create a new .py file, such as main.py.
+- 步骤1: 创建一个新的.py文件，例如main.py。
 ```python
 from pylmkit import BaseWebUI
 from dotenv import load_dotenv
@@ -181,15 +180,15 @@ web.run(
 )
 
 ```
-- step2: run web
+- 步骤2: 运行web程序
 
-In the terminal command line in the same directory as main.py, enter 
+在与main.py相同目录的终端命令行中，输入
 
 ```text
 streamlit run main.py
 ```
 
-## LICENSE
+## 开源协议
 
 Apache License Version 2.0
 

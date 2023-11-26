@@ -1,0 +1,6 @@
+Sphinx
+sphinxcontrib-napoleon
+sphinxcontrib-apidoc
+sphinx_rtd_theme
+m2r
+m2r2

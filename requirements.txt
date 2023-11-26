@@ -1,0 +1,16 @@
+streamlit
+pyyaml
+langchain
+duckduckgo_search
+unstructured
+pdf2image
+pdfminer.six
+sentence-transformers
+faiss-cpu
+openai
+websocket
+dashscope
+zhipuai
+python-dotenv
+streamlit
+chromadb

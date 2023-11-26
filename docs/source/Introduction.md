@@ -1,19 +1,14 @@
 # PyLMKit
 
-[中文版](https://github.com/52phm/pylmkit/blob/main/README_zh.md)
-
 **pylmkit** is a project aimed at building or integrating Large Model (LM) applications with practical value. It is designed to assist users in quickly constructing applications tailored to their own business needs.
-
-## Quick Install
-```bash
-pip install -U pylmkit
-```
 
 ## Document
 
-- [English document](http://en.pylmkit.cn)
-- [中文文档](http://zh.pylmkit.cn)
 
+## Install
+```bash
+pip install -U pylmkit
+```
 
 ## Functionality
 
@@ -118,17 +113,7 @@ while True:
 ```
 - llm model
 
-The LLM model can be imported using `PyLMKit` and also supports importing models with `LangChain`. Importing other models:
-
-```python
-from pylmkit.llms import ChatQianfan  # 百度-千帆
-from pylmkit.llms import ChatSpark  # 讯飞-星火
-from pylmkit.llms import ChatZhipu  # 清华-智谱
-from pylmkit.llms import ChatHunyuan  # 腾讯-混元
-from pylmkit.llms import ChatBaichuan  # 百川
-from pylmkit.llms import ChatTongyi  # 阿里-通义
-
-```
+The LLM model can be imported using `PyLMKit` and also supports importing models with `LangChain`.
 
 - role template
 
@@ -181,7 +166,7 @@ web.run(
 )
 
 ```
-- step2: run web
+- step2: Create a new .py file, such as main.py.
 
 In the terminal command line in the same directory as main.py, enter 
 
