@@ -17,6 +17,9 @@ pip install -U pylmkit
 ## 功能
 
 - 角色扮演：通过设置角色模板并结合在线搜索、记忆和知识库功能，实现了典型的对话类的功能应用。
+  
+![RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RolePlay.png)
+
 - 其他功能也在不断更新……
 
 ## 快速开始
