@@ -25,7 +25,8 @@ pip install -U pylmkit
 **Set API KEY**
 
 - A convenient method is to create a new .env file and configure all API key information within it, enabling easy utilization of different models. The format of the .env file is as follows:
-```text
+
+```python
 # OpenAI
 openai_api_key = ""
 
@@ -54,14 +55,18 @@ hunyuan_app_id = ""
 hunyuan_secret_id = ""
 hunyuan_secret_key = ""
 ```
+
 The method to load the .env file is as follows (it is recommended to place the .env file in the same path as your running .py file).
+
 ```python
 from dotenv import load_dotenv
 
 # load .env
 load_dotenv()
 ```
+
 - Another method is to configure it through os.environ. Here's an example.
+
 ```python
 import os
 
@@ -75,6 +80,8 @@ os.environ['qianfan_sk'] = ""
 ```
 
 **A demo running in Python.**
+
+
 ```python
 from dotenv import load_dotenv
 from pylmkit.app import RolePlay
@@ -117,6 +124,7 @@ while True:
     
 
 ```
+
 - llm model
 
 The LLM model can be imported using `PyLMKit` and also supports importing models with `LangChain`. Importing other models:
@@ -142,7 +150,10 @@ The algorithm returns two values: "response" and "refer." The "response" represe
 
 **Running in the Streamlit web**
 
+
 - step1: Create a new .py file, such as main.py.
+
+
 ```python
 from pylmkit import BaseWebUI
 from dotenv import load_dotenv
@@ -183,13 +194,17 @@ web.run(
 )
 
 ```
+
 - step2: run web
+
 
 In the terminal command line in the same directory as main.py, enter 
 
-```text
+
+```python
 streamlit run main.py
 ```
+
 
 ## LICENSE
 
