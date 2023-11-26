@@ -10,7 +10,7 @@ def _import_ChatQianfan() -> Any:
     from langchain.llms import QianfanLLMEndpoint
     from langchain.chat_models import QianfanChatEndpoint
 
-    return QianfanLLMEndpoint()
+    return QianfanLLMEndpoint
 
 
 def _import_ChatOpenAI() -> Any:

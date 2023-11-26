@@ -1,5 +1,6 @@
 streamlit
 pyyaml
+qianfan
 langchain
 duckduckgo_search
 unstructured
@@ -12,5 +13,4 @@ websocket
 dashscope
 zhipuai
 python-dotenv
-streamlit
 chromadb

@@ -107,6 +107,7 @@ rp = RolePlay(
     llm_model=model,
     memory=memory,
     online_search_kwargs={},
+    return_language='English'
 )
 
 while True:
@@ -167,16 +168,17 @@ rp = RolePlay(
     llm_model=model,
     memory=memory,
     online_search_kwargs={},
+    return_language='English'
 )
 
 # init web
 web = BaseWebUI()
 web.run(
     obj=rp.invoke,  # Designated main function.
-    input_param=[{"label": "User input", "name": "query", "type": "chat"},  # type: chat text string bool float ...
+    input_param=[{"label": "User input", "name": "query", "type": "chat"},  # type, chat text string bool float ...
                  ],
     output_param=[{'label': 'response content', 'name': 'ai', 'type': 'chat'},
-                  {'label': 'refer info', 'name': 'refer', 'type': 'refer'}  # type: chat refer text string bool float ...
+                  {'label': 'refer info', 'name': 'refer', 'type': 'refer'}  # type, chat refer text string bool float ...
                   ]
 )
 
