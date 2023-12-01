@@ -1,6 +1,6 @@
 # PyLMKit
 
-[中文版](https://github.com/52phm/pylmkit/blob/main/README_zh.md)
+[简体中文版 README](https://github.com/52phm/pylmkit/blob/main/README_zh.md)
 
 **pylmkit** is a project aimed at building or integrating Large Model (LM) applications with practical value. It is designed to assist users in quickly constructing applications tailored to their own business needs.
 
@@ -11,6 +11,7 @@ pip install -U pylmkit
 
 ## Document
 
+- [PyLMKit应用（online application）](http://app.pylmkit.cn)
 - [English document](http://en.pylmkit.cn)
 - [中文文档](http://zh.pylmkit.cn)
 
@@ -19,9 +20,17 @@ pip install -U pylmkit
 
 - RolePlay：By setting up role templates and combining online search, memory, and knowledge base functionalities, we achieve typical conversational applications.
 
+    - [RolePlay: Using Tutorials](https://github.com/52phm/pylmkit/blob/main/examples/00-How to use RolePlay.ipynb)
+
 ![RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RolePlay.png)
 
+- RAG：RAG (Retrieval-Augmented Generation) is a method that utilizes knowledge base retrieval to provide content relevant to user queries, thereby enhancing the accuracy and specificity of the model's answers. RAG encompasses local knowledge bases, web-based knowledge bases, and database knowledge bases. Currently, pylmkit supports the rapid construction of local and web-based knowledge bases.
+
+![RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RAG.png)
+
 - Other features are constantly being updated...
+
+  
 
 ## QuickStart
 
@@ -30,31 +39,24 @@ pip install -U pylmkit
 - A convenient method is to create a new .env file and configure all API key information within it, enabling easy utilization of different models. The format of the .env file is as follows:
 
 ```python
-# OpenAI
-openai_api_key = ""
+openai_api_key = ""  # OpenAI
 
-# 百度-千帆
-QIANFAN_AK = ""
+QIANFAN_AK = ""  # 百度-千帆
 QIANFAN_SK = ""
 
-# 阿里-通义
-DASHSCOPE_API_KEY = ""
+DASHSCOPE_API_KEY = ""  # 阿里-通义
 
-# 科大讯飞-星火
-spark_appid = ""
+spark_appid = ""  # 科大讯飞-星火
 spark_apikey = ""
 spark_apisecret = ""
 spark_domain = "generalv3"
 
-# 清华-智谱AI
-zhipu_apikey = ""
+zhipu_apikey = ""  # 清华-智谱AI
 
-# 百川
-baichuan_api_key = ""
+baichuan_api_key = ""  # 百川
 baichuan_secret_key = ""
 
-# 腾讯-混元
-hunyuan_app_id = ""
+hunyuan_app_id = ""  # 腾讯-混元
 hunyuan_secret_id = ""
 hunyuan_secret_key = ""
 ```
@@ -74,11 +76,9 @@ load_dotenv()
 import os
 
 
-# openai
-os.environ['openai_api_key'] = ""
+os.environ['openai_api_key'] = ""  # openai
 
-# 百度
-os.environ['qianfan_ak'] = ""
+os.environ['qianfan_ak'] = ""  # 百度
 os.environ['qianfan_sk'] = ""
 ```
 
@@ -204,7 +204,7 @@ web.run(
 In the terminal command line in the same directory as main.py, enter 
 
 
-```python
+```bash
 streamlit run main.py
 ```
 

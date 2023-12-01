@@ -33,7 +33,7 @@ class BaseMemory(object):
         if self.streamlit_web:  # streamlit rerun page, so need cache
             self.memory_messages = st.session_state['memory']
 
-    def add(self, role, content):
+    def add(self, role, content, refer=''):
         """
         role，human ai system
         """
@@ -46,7 +46,7 @@ class BaseMemory(object):
         else:
             raise Exception(f"The role `{role}` does not exist")
         self.memory_messages.append(
-            {"role": role, "content": content, "date": time.strftime('%Y-%m-%d %H:%M:%S')})
+            {"role": role, "content": content, "refer": refer, "date": time.strftime('%Y-%m-%d %H:%M:%S')})
         if self.streamlit_web:  # streamlit rerun page, so need cache
             st.session_state['memory'] = self.memory_messages
 
@@ -89,12 +89,18 @@ class BaseKnowledgeBase(object):
         else:
             raise Exception(f"The file type is not supported")
         data_dict_as_document = dict_as_document(data)
-        cls()._base(documents=data_dict_as_document, return_mode=return_mode, is_return=is_return, extend=extend)
+        result = cls()._base(documents=data_dict_as_document, return_mode=return_mode, is_return=is_return,
+                             extend=extend)
+        if is_return:
+            return result
 
     @classmethod
     def add(cls, texts, metadatas=None, is_return=True, return_mode="doc", extend=True, types="Document"):
         data_dict_as_document = text_as_document(texts=texts, metadatas=metadatas, types=types)
-        cls()._base(documents=data_dict_as_document, return_mode=return_mode, is_return=is_return, extend=extend)
+        result = cls()._base(documents=data_dict_as_document, return_mode=return_mode, is_return=is_return,
+                             extend=extend)
+        if is_return:
+            return result
 
     def split(self, splitter=None, chunk_size=500, chunk_overlap=100, return_mode='doc', **kwargs):
         if splitter is None:
@@ -179,6 +185,34 @@ def load_multi_memory(path: str, suffixes=None, show_progress: bool = True):
     return data
 
 
+def input_widget(input1, input2, type, value):
+    if type == "int":
+        return st.number_input(format='%d', step=1, **input1)
+    if type == "float":
+        return st.number_input(format='%f', **input1)
+    elif type in ['list', 'List', 'select']:
+        return st.selectbox(options=value, **input2)
+    elif type == "bool":
+        if value in [True, 'True', 'true']:
+            options = [True, False]
+        else:
+            options = [False, True]
+        return st.radio(options=options, horizontal=True, **input2)
+    elif type == "file":
+        uploaded_file = st.file_uploader(**input2)
+        if uploaded_file is not None:
+            res = str(Path().cwd() / uploaded_file.name)
+            with open(res, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+        else:
+            res = None
+        return res
+    elif type in ['multiselect']:
+        return st.multiselect(options=value, **input2)
+    else:
+        return st.text_input(**input1)
+
+
 def generate_input_widget(mode="main", **kwargs):  # 在前端生成输入框
     """
     mode, default "main" ,other "sidebar"
@@ -186,53 +220,24 @@ def generate_input_widget(mode="main", **kwargs):  # 在前端生成输入框
     label = kwargs.get('label', "")
     value = kwargs.get('value', None)
     name = kwargs.get('name', None)
-    _input = {"label": label, "value": value, "key": f"{name}-{label}"}
+    _input1 = {"label": label, "value": value, "key": f"{name}-{label}"}
     _input2 = {"label": label, "key": f"{name}-{label}"}
     _type = kwargs.get('type', None)  # int float bool string chat file
     if mode == 'main':
-        if _type == "int":
-            return st.number_input(format='%d', step=1, **_input)
-        if _type == "float":
-            return st.number_input(format='%f', **_input)
-        elif _type == "bool":
-            if value in [True, 'True', 'true']:
-                options = [True, False]
-            else:
-                options = [False, True]
-            return st.radio(options=options, horizontal=True, **_input2)
-        elif _type == "file":
-            uploaded_file = st.file_uploader(**_input2)
-            if uploaded_file is not None:
-                res = str(Path().cwd() / uploaded_file.name)
-                with open(res, "wb") as f:
-                    f.write(uploaded_file.getbuffer())
-            else:
-                res = None
-            return res
-        else:
-            return st.text_input(**_input)
+        return input_widget(
+            input1=_input1,
+            input2=_input2,
+            type=_type,
+            value=value
+        )
     else:
-        if _type == "int":
-            return st.sidebar.number_input(format='%d', step=1, **_input)
-        if _type == "float":
-            return st.sidebar.number_input(format='%f', **_input)
-        elif _type == "bool":
-            if value in [True, 'True', 'true']:
-                options = [True, False]
-            else:
-                options = [False, True]
-            return st.sidebar.radio(options=options, horizontal=True, **_input2)
-        elif _type == "file":
-            uploaded_file = st.sidebar.file_uploader(**_input2)
-            if uploaded_file is not None:
-                res = str(Path().cwd() / uploaded_file.name)
-                with open(res, "wb") as f:
-                    f.write(uploaded_file.getbuffer())
-            else:
-                res = None
-            return res
-        else:  # 输入为字符串
-            return st.sidebar.text_input(**_input)
+        with st.sidebar:
+            return input_widget(
+                input1=_input1,
+                input2=_input2,
+                type=_type,
+                value=value
+            )
 
 
 class BaseWebUI(object):
@@ -250,7 +255,6 @@ class BaseWebUI(object):
                  placeholder=None,
                  refer_name=None,
                  ):
-
         self.title = title
         self.layout = layout
         self.page_icon = page_icon
@@ -357,6 +361,21 @@ class BaseWebUI(object):
     def wrapper(self, fun):
         return partial(fun)
 
+    def param(self, label, type, value, mode='sidebar'):
+        input_kwargs = {
+            "label": label,
+            "type": type,
+            "value": value
+        }
+        key = f"{label}-{type}-{str(value)}"
+        if key not in st.session_state.keys():
+            st.session_state[key] = ""
+        renew_value = generate_input_widget(
+            mode=mode,
+            **input_kwargs
+        )
+        return renew_value
+
     def base_page(self):
         st.set_page_config(
             page_title=self.title,
@@ -374,3 +393,5 @@ class BaseWebUI(object):
             st.markdown(init_logo.format(**self.logo2), unsafe_allow_html=True)
         if self.logo1:
             st.markdown(init_logo.format(**self.logo1), unsafe_allow_html=True)
+
+

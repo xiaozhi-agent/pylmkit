@@ -26,7 +26,7 @@ class Document(BaseModel):
 
 
 def document_as_refer(documents):
-    document_refer = [f"[{i+1}] **{doc.metadata['source']}**  {doc.page_content}\n" for i, doc in enumerate(documents)]
+    document_refer = [f"[{i+1}] **{doc.metadata['source']}**  {doc.page_content}\n\n" for i, doc in enumerate(documents)]
     return "".join(document_refer)
 
 

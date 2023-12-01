@@ -1,62 +1,63 @@
 from pylmkit.llms import EmbeddingsHuggingFaceBge
+from pylmkit.llms import EmbeddingsHuggingFace
 from pylmkit.perception.text import Dict2Document, Text2Document
 from typing import Any, Iterable, List, Optional, Tuple, Type
+from pylmkit.perception.text import DocumentLoader, WebLoader
+from pylmkit.app import RolePlay
 
 
 class VectorDB(object):
-    def __init__(self, init_vdb=None):
+    def __init__(self, corpus=None, embed_model=None, vdb_model=None, init_vdb=None):
         self.vdb = init_vdb
+        if corpus and embed_model and vdb_model:
+            corpus = self.any2doc(corpus)
+            self.vdb = vdb_model.from_documents(corpus, embed_model, ids=[i for i in range(1, len(corpus) + 1)])
 
     @classmethod
-    def preload(cls, corpus, embed_model, vector_db_model, is_return=True, extend=True):
-        corpus = cls().any2doc(corpus)
-        _vdb = vector_db_model.from_documents(corpus, embed_model, ids=[i for i in range(1, len(corpus)+1)])
+    def load(cls, vdb_model, embed_model, vdb_path, vdb_name="index", is_return=True, extend=True, **kwargs):
+        _vdb = vdb_model.load_local(vdb_path, embed_model, index_name=vdb_name, **kwargs)
         cls()._base(_vdb, is_return=is_return, extend=extend)
 
     @classmethod
-    def load(cls, vector_db, folder_path, embeddings, index_name="index", is_return=True, extend=True, **kwargs):
-        _vdb = vector_db.load_local(folder_path, embeddings, index_name=index_name, **kwargs)
-        cls()._base(_vdb, is_return=is_return, extend=extend)
+    def save(cls, vdb_path: str, vdb_name: str = "index", vdb_model=None):
+        if vdb_model is None:
+            vdb_model = cls().vdb
+        vdb_model.save_local(folder_path=vdb_path, index_name=vdb_name)
 
     @classmethod
-    def save(cls, folder_path: str, index_name: str = "index", vector_db=None):
-        if vector_db is None:
-            vector_db = cls().vdb
-        vector_db.save_local(folder_path=folder_path, index_name=index_name)
-
-    @classmethod
-    def add(cls, corpus, vector_db=None, is_return=True, extend=True):
-        if vector_db is None:
-            vector_db = cls().vdb
+    def add(cls, corpus, vdb_model=None, is_return=True, extend=True):
+        if vdb_model is None:
+            vdb_model = cls().vdb
         corpus = cls().any2doc(corpus)
-        vdb = vector_db.add_documents(documents=corpus)
+        vdb = vdb_model.add_documents(documents=corpus)
         cls()._base(vdb, is_return=is_return, extend=extend)
 
     @classmethod
-    def update(cls, ids, corpus, vector_db=None, is_return=True, extend=True):
-        if vector_db is None:
-            vector_db = cls().vdb
+    def update(cls, ids, corpus, vdb_model=None, is_return=True, extend=True):
+        if vdb_model is None:
+            vdb_model = cls().vdb
         corpus = cls().any2doc(corpus)
-        vector_db.update_documents(ids=ids, documents=corpus)
-        cls()._base(vector_db, is_return=is_return, extend=extend)
+        vdb_model.update_documents(ids=ids, documents=corpus)
+        cls()._base(vdb_model, is_return=is_return, extend=extend)
 
-    def get(self, ids, vector_db=None):
-        if vector_db is None:
-            vector_db = self.vdb
-        return vector_db._collection.get(ids=ids)
+    def get(self, ids, vdb_model=None):
+        if vdb_model is None:
+            vdb_model = self.vdb
+        return vdb_model._collection.get(ids=ids)
 
-    def delete(self, ids, vector_db=None, is_return=False, extend=False):
-        if vector_db is None:
-            vector_db = self.vdb
-        vector_db = vector_db._collection.delete(ids=ids)
-        self._base(vector_db, is_return=is_return, extend=extend)
+    def delete(self, ids, vdb_model=None, is_return=False, extend=False):
+        if vdb_model is None:
+            vdb_model = self.vdb
+        vdb_model = vdb_model._collection.delete(ids=ids)
+        self._base(vdb_model, is_return=is_return, extend=extend)
 
-    def count(self, vector_db=None):
-        if vector_db is None:
-            vector_db = self.vdb
-        return vector_db._collection.count()
+    def count(self, vdb_model=None):
+        if vdb_model is None:
+            vdb_model = self.vdb
+        return vdb_model._collection.count()
 
     def any2doc(self, corpus):
+        # any, str dict doc
         if corpus and isinstance(corpus[0], str):
             corpus = Text2Document.get(texts=corpus, is_return=True, return_mode='doc', extend=False)
         elif corpus and isinstance(corpus[0], dict):
@@ -65,19 +66,31 @@ class VectorDB(object):
             corpus = corpus
         return corpus
 
-    def _base(self, vector_db, is_return=True, extend=False):
+    def _base(self, vdb_model, is_return=True, extend=False):
         if extend:
-            self.vdb = vector_db
+            self.vdb = vdb_model
         if is_return:
-            return vector_db
+            return vdb_model
 
-
-class BaseRA(VectorDB):
-    def __init__(self, init_vdb):
-        super().__init__(init_vdb)
+    def ra(self,
+           query: str,
+           topk: int = 5,
+           search_language=[],
+           lambda_val: float = 0.025,
+           filter: Optional[str] = None,
+           n_sentence_context: int = 2,
+           **kwargs: Any, ):
+        return self.vdb.similarity_search(
+            query=query,
+            k=topk,
+            lambda_val=lambda_val,
+            filter=filter,
+            n_sentence_context=n_sentence_context,
+            **kwargs
+        )
 
     def retriever(self,
-                  k,
+                  topk,
                   filter_metadata={},
                   fetch_k=20,
                   lambda_mult=0.5,
@@ -144,38 +157,151 @@ class BaseRA(VectorDB):
                     )
                 """
         search_kwargs = {}
-        for kwarg in [k, filter_metadata, fetch_k, lambda_mult, score_threshold]:
+        for kwarg in [topk, filter_metadata, fetch_k, lambda_mult, score_threshold]:
             if kwarg:
                 search_kwargs[str(kwarg)] = kwarg
         return self.vdb.as_retriever(search_kwargs=search_kwargs, search_type=search_type)
 
-    def ra(self,
-           query: str,
-           k: int = 5,
-           search_language=[],
-           lambda_val: float = 0.025,
-           filter: Optional[str] = None,
-           n_sentence_context: int = 2,
-           **kwargs: Any, ):
-        return self.vdb.similarity_search(
+
+class BaseRAG(VectorDB, RolePlay):
+    def __init__(self,
+                 embed_model,
+                 vdb_model,
+                 llm_model,
+                 corpus=None,
+                 vdb_path=None,
+                 vdb_name="index",
+                 init_vdb=None,
+                 role_template="",
+                 memory=None,
+                 online_search_kwargs={},
+                 return_language="English",
+                 ):
+        VectorDB.__init__(self, init_vdb=None)
+        RolePlay.__init__(self,
+                          role_template=role_template,
+                          llm_model=llm_model,
+                          memory=memory,
+                          online_search_kwargs=online_search_kwargs,
+                          return_language=return_language
+                          )
+        if init_vdb:
+            VectorDB.__init__(self, init_vdb=init_vdb)
+        elif vdb_path and vdb_name:
+            super().load(vdb_model=vdb_model,
+                         embed_model=embed_model,
+                         vdb_path=vdb_path,
+                         vdb_name=vdb_name,
+                         is_return=False,
+                         extend=True
+                         )
+        elif corpus:
+            super().__init__(corpus=corpus, embed_model=embed_model, vdb_model=vdb_model)
+        else:
+            raise Exception("`corpus`, `vdb_path`, `init_vdb` Cannot all be None!")
+
+    def invoke(
+            self,
+            query: str,
+            topk: int = 5,
+            search_language=[],
+            lambda_val: float = 0.025,
+            filter: Optional[str] = None,
+            n_sentence_context: int = 2,
+            ra_kwargs={},
+            **kwargs
+    ):
+        ra_documents = super().ra(
             query=query,
-            k=k,
+            topk=topk,
+            search_language=search_language,
             lambda_val=lambda_val,
             filter=filter,
             n_sentence_context=n_sentence_context,
+            **ra_kwargs
+        )
+        print(">>><<<", len(ra_documents))
+        return super().invoke(query=query, ra_documents=ra_documents, **kwargs)
+
+    def stream(
+            self,
+            query: str,
+            topk: int = 5,
+            search_language=[],
+            lambda_val: float = 0.025,
+            filter: Optional[str] = None,
+            n_sentence_context: int = 2,
+            ra_kwargs={},
             **kwargs
+    ):
+        ra_documents = super().ra(
+            query=query,
+            topk=topk,
+            search_language=search_language,
+            lambda_val=lambda_val,
+            filter=filter,
+            n_sentence_context=n_sentence_context,
+            **ra_kwargs
+        )
+        return super().stream(query=query, ra_documents=ra_documents, **kwargs)
+
+
+class DocRAG(BaseRAG):
+    def __init__(self,
+                 embed_model,
+                 vdb_model,
+                 llm_model,
+                 corpus=None,
+                 vdb_path=None,
+                 vdb_name="index",
+                 init_vdb=None,
+                 role_template="",
+                 memory=None,
+                 online_search_kwargs={},
+                 return_language="English",
+                 ):
+        super().__init__(
+            embed_model=embed_model,
+            vdb_model=vdb_model,
+            llm_model=llm_model,
+            corpus=corpus,
+            vdb_path=vdb_path,
+            vdb_name=vdb_name,
+            init_vdb=init_vdb,
+            role_template=role_template,
+            memory=memory,
+            online_search_kwargs=online_search_kwargs,
+            return_language=return_language
         )
 
 
-class DocRAG(BaseRA):
-    pass
+class WebRAG(BaseRAG):
+    def __init__(self,
+                 embed_model,
+                 vdb_model,
+                 llm_model,
+                 corpus=None,
+                 vdb_path=None,
+                 vdb_name="index",
+                 init_vdb=None,
+                 role_template="",
+                 memory=None,
+                 online_search_kwargs={},
+                 return_language="English",
+                 ):
+        super().__init__(
+            embed_model=embed_model,
+            vdb_model=vdb_model,
+            llm_model=llm_model,
+            corpus=corpus,
+            vdb_path=vdb_path,
+            vdb_name=vdb_name,
+            init_vdb=init_vdb,
+            role_template=role_template,
+            memory=memory,
+            online_search_kwargs=online_search_kwargs,
+            return_language=return_language
+        )
 
-
-class WebRAG(BaseRA):
-    pass
-
-
-class DBRAG(BaseRA):
-    pass
 
 
