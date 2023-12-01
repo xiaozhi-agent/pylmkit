@@ -20,7 +20,7 @@ pip install -U pylmkit
 
 - RolePlay：By setting up role templates and combining online search, memory, and knowledge base functionalities, we achieve typical conversational applications.
 
-    - [RolePlay: Using Tutorials](https://github.com/52phm/pylmkit/blob/main/examples/00-How to use RolePlay.ipynb)
+    - [RolePlay: Using Tutorials](https://github.com/52phm/pylmkit/blob/main/examples/00-How-to-use-RolePlay.ipynb)
 
 ![RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RolePlay.png)
 
