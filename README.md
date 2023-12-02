@@ -11,9 +11,9 @@ pip install -U pylmkit
 
 ## Document
 
-- [PyLMKit应用（online application）](http://app.pylmkit.cn){:target="_blank"}
-- [English document](http://en.pylmkit.cn){:target="_blank"}
-- [中文文档](http://zh.pylmkit.cn){:target="_blank"}
+- <a href="http://app.pylmkit.cn" target="_blank">PyLMKit应用（online application）</a>
+- <a href="http://en.pylmkit.cn" target="_blank">English document</a>
+- <a href="http://zh.pylmkit.cn" target="_blank">中文文档</a>
 
 
 ## Functionality
@@ -33,7 +33,7 @@ pip install -U pylmkit
   - DBRAG: Knowledge base based on databases.
   - MemoryRAG: Knowledge base based on memory.
 
-  - [Example PyLMKit RAG: Using Tutorials](https://github.com/52phm/pylmkit/blob/main/examples/01-How-to-use-RAG.ipynb)
+[Example PyLMKit RAG: Using Tutorials](https://github.com/52phm/pylmkit/blob/main/examples/01-How-to-use-RAG.ipynb)
 
 ![PyLMKit RAG](https://github.com/52phm/pylmkit/blob/main/docs/images/RAG.png)
 

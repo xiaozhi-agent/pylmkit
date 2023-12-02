@@ -10,9 +10,9 @@ pip install -U pylmkit
 
 ## 文档
 
-- [PyLMKit应用（online application）](http://app.pylmkit.cn){:target="_blank"}
-- [English document](http://en.pylmkit.cn){:target="_blank"}
-- [中文文档](http://zh.pylmkit.cn){:target="_blank"}
+- <a href="http://app.pylmkit.cn" target="_blank">PyLMKit应用（online application）</a>
+- <a href="http://en.pylmkit.cn" target="_blank">English document</a>
+- <a href="http://zh.pylmkit.cn" target="_blank">中文文档</a>
 
 
 ## 功能
@@ -32,7 +32,7 @@ pip install -U pylmkit
   - 基于数据库的知识库DBRAG
   - 基于记忆的知识库MemoryRAG
 
- - [PyLMKit RAG: 使用例子教程](https://github.com/52phm/pylmkit/blob/main/examples/01-How-to-use-RAG.ipynb)
+[PyLMKit RAG: 使用例子教程](https://github.com/52phm/pylmkit/blob/main/examples/01-How-to-use-RAG.ipynb)
 
 ![PyLMKit RAG](https://github.com/52phm/pylmkit/blob/main/docs/images/RAG.png)
 
