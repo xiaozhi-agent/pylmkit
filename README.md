@@ -11,6 +11,8 @@ pip install -U pylmkit
 
 ## Document
 
+[链接文本](http://app.pylmkit.cn){:target="_blank" rel="noopener"}
+
 - <a href="http://app.pylmkit.cn" target="_blank">PyLMKit应用（online application）</a>
 - <a href="http://en.pylmkit.cn" target="_blank">English document</a>
 - <a href="http://zh.pylmkit.cn" target="_blank">中文文档</a>
