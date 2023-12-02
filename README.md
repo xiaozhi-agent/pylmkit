@@ -18,15 +18,24 @@ pip install -U pylmkit
 
 ## Functionality
 
-- RolePlay：By setting up role templates and combining online search, memory, and knowledge base functionalities, we achieve typical conversational applications.
+- RolePlay：By setting up role templates and combining online search, memory, and knowledge base functionalities, we achieve typical conversational applications.Role-playing is a fundamental and essential feature in various major model enterprise apps. Nowadays, many underlying logics of functions such as `short video copywriting`, `Little Red Book copywriting`, and `emotionally intelligent circle of friends` are based on setting different role templates in role-playing.
 
-    - [RolePlay: Using Tutorials](https://github.com/52phm/pylmkit/blob/main/examples/00-How-to-use-RolePlay.ipynb)
+    - [PyLMKit RolePlay: Using Tutorials](https://github.com/52phm/pylmkit/blob/main/examples/00-How-to-use-RolePlay.ipynb)
 
-![RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RolePlay.png)
+![PyLMKit RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RolePlay.png)
 
 - RAG：RAG (Retrieval-Augmented Generation) is a method that utilizes knowledge base retrieval to provide content relevant to user queries, thereby enhancing the accuracy and specificity of the model's answers. RAG encompasses local knowledge bases, web-based knowledge bases, and database knowledge bases. Currently, pylmkit supports the rapid construction of local and web-based knowledge bases.
 
-![RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RAG.png)
+**PyLMKit has designed four RAG functionalities**
+
+- DocRAG: Knowledge base based on local documents.
+- WebRAG: Knowledge base based on web pages.
+- DBRAG: Knowledge base based on databases.
+- MemoryRAG: Knowledge base based on memory.
+
+  - [PyLMKit RAG: Using Tutorials](https://github.com/52phm/pylmkit/blob/main/examples/01-How-to-use-RAG.ipynb)
+
+![PyLMKit RAG](https://github.com/52phm/pylmkit/blob/main/docs/images/RAG.png)
 
 - Other features are constantly being updated...
 

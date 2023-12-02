@@ -10,17 +10,34 @@ pip install -U pylmkit
 
 ## 文档
 
+- [PyLMKit应用（online application）](http://app.pylmkit.cn)
 - [English document](http://en.pylmkit.cn)
 - [中文文档](http://zh.pylmkit.cn)
 
 
 ## 功能
 
-- 角色扮演：通过设置角色模板并结合在线搜索、记忆和知识库功能，实现了典型的对话类的功能应用。
+- 角色扮演：通过设置角色模板并结合在线搜索、记忆和知识库功能，实现了典型的对话类的功能应用。RolePlay角色扮演是一种基础功能，也是重要的功能。现在在各大大模型企业的APP中可以看到很多关于`短视频文案、小红书文案、高情商朋友圈`等这些功能的底层逻辑是基于角色扮演中设置不同的角色模板实现的。
   
-![RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RolePlay.png)
+  - [PyLMKit RolePlay: 使用例子教程](https://github.com/52phm/pylmkit/blob/main/examples/00-How-to-use-RolePlay.ipynb)
 
-- 其他功能也在不断更新……
+![PyLMKit RolePlay](https://github.com/52phm/pylmkit/blob/main/docs/images/RolePlay.png)
+
+- RAG（Retrieval-Augmented Generation，检索增强生成）是一种利用知识库检索的方法，提供与用户查询相关的内容，从而增强模型答案的准确性和特异性。RAG包括本地知识库、基于网络的知识库、记忆知识库和数据库知识库。
+
+**PyLMKit设计了四种RAG功能**
+
+- 基于本地文档的知识库DocRAG
+- 基于网页的知识库WebRAG
+- 基于数据库的知识库DBRAG
+- 基于记忆的知识库MemoryRAG
+
+ - [PyLMKit RAG: 使用例子教程](https://github.com/52phm/pylmkit/blob/main/examples/01-How-to-use-RAG.ipynb)
+
+![PyLMKit RAG](https://github.com/52phm/pylmkit/blob/main/docs/images/RAG.png)
+
+- 其他功能正在更新中……
+
 
 ## 快速开始
 

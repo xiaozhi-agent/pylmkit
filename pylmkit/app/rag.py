@@ -220,7 +220,6 @@ class BaseRAG(VectorDB, RolePlay):
             n_sentence_context=n_sentence_context,
             **ra_kwargs
         )
-        print(">>><<<", len(ra_documents))
         return super().invoke(query=query, ra_documents=ra_documents, **kwargs)
 
     def stream(
