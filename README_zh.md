@@ -10,9 +10,9 @@ pip install -U pylmkit
 
 ## 文档
 
-- [PyLMKit应用（online application）](http://app.pylmkit.cn)
-- [English document](http://en.pylmkit.cn)
-- [中文文档](http://zh.pylmkit.cn)
+- [PyLMKit应用（online application）](http://app.pylmkit.cn){:target="_blank"}
+- [English document](http://en.pylmkit.cn){:target="_blank"}
+- [中文文档](http://zh.pylmkit.cn){:target="_blank"}
 
 
 ## 功能
@@ -25,12 +25,12 @@ pip install -U pylmkit
 
 - RAG（Retrieval-Augmented Generation，检索增强生成）是一种利用知识库检索的方法，提供与用户查询相关的内容，从而增强模型答案的准确性和特异性。RAG包括本地知识库、基于网络的知识库、记忆知识库和数据库知识库。
 
-**PyLMKit设计了四种RAG功能**
+  **PyLMKit设计了四种RAG功能**
 
-- 基于本地文档的知识库DocRAG
-- 基于网页的知识库WebRAG
-- 基于数据库的知识库DBRAG
-- 基于记忆的知识库MemoryRAG
+  - 基于本地文档的知识库DocRAG
+  - 基于网页的知识库WebRAG
+  - 基于数据库的知识库DBRAG
+  - 基于记忆的知识库MemoryRAG
 
  - [PyLMKit RAG: 使用例子教程](https://github.com/52phm/pylmkit/blob/main/examples/01-How-to-use-RAG.ipynb)
 
