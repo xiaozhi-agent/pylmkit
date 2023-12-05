@@ -21,32 +21,30 @@ pip install -U pylmkit
 
 ## 功能
 
-- 角色扮演：通过设置角色模板并结合在线搜索、记忆和知识库功能，实现了典型的对话类的功能应用。RolePlay角色扮演是一种基础功能，也是重要的功能。现在在各大大模型企业的APP中可以看到很多关于`短视频文案、小红书文案、讲故事`等这些功能的底层逻辑是基于角色扮演中设置不同的角色模板实现的。
+- 1.角色扮演：通过设置角色模板并结合在线搜索、记忆和知识库功能，实现了典型的对话类的功能应用。RolePlay角色扮演是一种基础功能，也是重要的功能。现在在各大大模型企业的APP中可以看到很多关于`短视频文案、小红书文案、讲故事`等这些功能的底层逻辑是基于角色扮演中设置不同的角色模板实现的。
   
-**案例教程**
+  - 案例教程
 
-[PyLMKit RolePlay: Using Tutorials(English version)](https://github.com/52phm/pylmkit/blob/main/examples/01-RolePlay-APP.md)
+    - [PyLMKit RolePlay: Using Tutorials(English version)](https://github.com/52phm/pylmkit/blob/main/examples/01-RolePlay-APP.md)
 
-[PyLMKit 角色扮演案例教程(简体中文版)](https://github.com/52phm/pylmkit/blob/main/examples/01-角色扮演应用案例.ipynb)
+    - [PyLMKit 角色扮演案例教程(简体中文版)](https://github.com/52phm/pylmkit/blob/main/examples/01-角色扮演应用案例.ipynb)
 
 
 ![PyLMKit RolePlay](./docs/images/RolePlay.png)
 
-- RAG（Retrieval-Augmented Generation，检索增强生成）是一种利用知识库检索的方法，提供与用户查询相关的内容，从而增强模型答案的准确性和特异性。RAG包括本地知识库、基于网络的知识库、记忆知识库和数据库知识库。
+- 2.RAG（Retrieval-Augmented Generation，检索增强生成）是一种利用知识库检索的方法，提供与用户查询相关的内容，从而增强模型答案的准确性和特异性。RAG包括本地知识库、基于网络的知识库、记忆知识库和数据库知识库。
 
-  **PyLMKit设计了四种RAG功能**
+  - **PyLMKit设计了四种RAG功能**
 
-  - 基于本地文档的知识库DocRAG
-  - 基于网页的知识库WebRAG
-  - 基于数据库的知识库DBRAG
-  - 基于记忆的知识库MemoryRAG
+    - 基于本地文档的知识库DocRAG
+    - 基于网页的知识库WebRAG
+    - 基于数据库的知识库DBRAG
+    - 基于记忆的知识库MemoryRAG
 
-
-**Case Tutorial**
-[README.md](README_English.md)
-[PyLMKit RAG: Using Tutorials(English version)](https://github.com/52phm/pylmkit/blob/main/examples/02-RAG-Retrieval-Augmented-Generation.md)
-
-[PyLMKit基于知识库检索增强生成RAG案例教程(简体中文版)](https://github.com/52phm/pylmkit/blob/main/examples/02-基于知识库检索增强生成RAG案例.ipynb)
+  - 案例教程
+  
+    - [PyLMKit RAG: Using Tutorials(English version)](https://github.com/52phm/pylmkit/blob/main/examples/02-RAG-Retrieval-Augmented-Generation.md)
+    - [PyLMKit基于知识库检索增强生成RAG案例教程(简体中文版)](https://github.com/52phm/pylmkit/blob/main/examples/02-基于知识库检索增强生成RAG案例.ipynb)
 
 
 ![PyLMKit RAG](./docs/images/RAG.png)
@@ -67,10 +65,11 @@ pip install -U pylmkit
 - `API`付费调用型
 - 本地开源模型下载部署
 
-**API 调用**
+**API 调用型**
 
 （1）首先配置好 `API KEY`，便于调用`LLM`模型。
 
+一个方便的方法是创建一个新的`.env`文件，并在其中配置所有的API密钥信息，从而方便地使用不同的模型。`.env`文件的格式如下：
 ```python
 openai_api_key = ""  # OpenAI
 
@@ -109,8 +108,12 @@ from pylmkit.llms import ChatHunyuan  # 腾讯-混元
 from pylmkit.llms import ChatBaichuan  # 百川
 from pylmkit.llms import ChatTongyi  # 阿里-通义
 from pylmkit.llms import ChatOpenAI  # OpenAI
+from dotenv import load_dotenv
 
 
+# 加载 .env
+load_dotenv()
+# 加载模型
 model = ChatQianfan()
 
 # 普通模式
@@ -153,7 +156,7 @@ LocalLLMModel(model_path='Qwen/Qwen-1_8B-Chat',  # 模型名称
 
 - （2）将下载模型及文件拷贝到自己想要的位置
 
-一般采用上述下载方式，模型都会下载缓存到 `C` 盘，缓存的位置一般在：`C:\Users\txhy\.cache\modelscope\hub`，
+一般采用上述下载方式，模型都会下载缓存到 `C` 盘，缓存的位置一般在：`C:\Users\你的用户名\.cache\modelscope\hub`，
 将刚刚下载的`qwen/Qwen-1_8B-Chat`文件夹剪切保存到 `D:/mycode_llm/` （这里举个例子，可以自定义）路径下，主要避免文件太大占满 `C` 盘。
 
 - （3）安装该开源模型的依赖库：`requirements.txt`
@@ -164,9 +167,6 @@ LocalLLMModel(model_path='Qwen/Qwen-1_8B-Chat',  # 模型名称
 
 ![local_model_readme.png](./docs/images/local_model_readme.png)
 
-```bash
-pip install -r requirements.txt
-```
 这个步骤做好了，下一步骤才能正确运行模型，不然可能会遇到大量BUG，那么这个时候就需要一个一个排查和解决。
 
 - （4）加载本地模型并使用
