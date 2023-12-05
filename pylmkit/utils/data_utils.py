@@ -25,6 +25,17 @@ class Document(BaseModel):
         return f"Document(page_content='{self.page_content}', metadata={self.metadata})"
 
 
+def stream_print(string, buffer_size=3):
+    buffer = []
+    for char in string:
+        buffer.append(char)
+        if len(buffer) >= buffer_size:
+            yield ''.join(buffer)
+            buffer.clear()
+    if buffer:
+        yield ''.join(buffer)
+
+
 def document_as_refer(documents):
     document_refer = [f"[{i+1}] **{doc.metadata['source']}**  {doc.page_content}\n\n" for i, doc in enumerate(documents)]
     return "".join(document_refer)

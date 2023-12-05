@@ -3,6 +3,7 @@
 .grunt
 /.idea
 .ipynb_checkpoints
+flash-attention/
 
 ## Dependency directory
 ## Commenting this out is preferred by some people, see
@@ -23,6 +24,9 @@ setup.py
 tes
 *.env
 *.json
+*.mp3
+*.wav
+
 
 # eBook build output
 *.epub

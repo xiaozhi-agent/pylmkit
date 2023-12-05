@@ -14,6 +14,7 @@ from time import mktime
 from urllib.parse import urlencode
 from wsgiref.handlers import format_date_time
 import websocket  # 使用websocket_client
+from pylmkit.utils.data_utils import stream_print
 
 
 class WsParam(object):
@@ -142,5 +143,10 @@ class ChatSpark(WsParam):
         result = self.answer
         self.clear()  # reset
         return result
+
+    def stream(self, query, buffer_size=3):
+        response = self.invoke(query)
+        return stream_print(response, buffer_size=buffer_size)
+
 
 

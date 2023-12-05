@@ -25,6 +25,12 @@ def _import_ChatTongyi() -> Any:
     return ChatTongyi
 
 
+def _import_LocalLLMModel() -> Any:
+    from pylmkit.llms._huggingface_llm import LocalLLMModel
+
+    return LocalLLMModel
+
+
 def _import_ChatHunyuan() -> Any:
     from langchain.chat_models import ChatHunyuan
 
@@ -94,6 +100,8 @@ def __getattr__(name: str) -> Any:
         return _import_ChatSpark()
     elif name == "ChatTongyi":
         return _import_ChatTongyi()
+    elif name == "LocalLLMModel":
+        return _import_LocalLLMModel()
     elif name == "EmbeddingsQianfan":
         return _import_EmbeddingsQianfan()
     elif name == "EmbeddingsHuggingFace":
@@ -116,6 +124,7 @@ __all__ = [
     "ChatTongyi",
     "ChatSpark",
     "ChatZhipu",
+    "LocalLLMModel",
     "EmbeddingsQianfan",
     "EmbeddingsHuggingFace",
     "EmbeddingsHuggingFaceInstruct",

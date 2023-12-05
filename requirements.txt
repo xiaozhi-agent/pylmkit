@@ -14,3 +14,4 @@ dashscope
 zhipuai
 python-dotenv
 chromadb
+BeautifulSoup4
