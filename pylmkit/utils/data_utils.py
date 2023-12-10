@@ -1,4 +1,6 @@
 import json
+import toml
+import pandas as pd
 import yaml
 from pathlib import Path
 from yaml.loader import SafeLoader
@@ -64,15 +66,6 @@ def message_as_string(memory_messages):
     return "".join(messages_string)
 
 
-def read_yaml(filepath):
-    try:
-        with open(filepath, encoding="utf-8") as fp:
-            result = yaml.load(fp, Loader=SafeLoader)
-    except Exception as e:
-        raise Exception(e)
-    return result
-
-
 def text_as_document(texts, metadatas=None, types="Document"):
     documents = []
     if metadatas:
@@ -90,6 +83,15 @@ def text_as_document(texts, metadatas=None, types="Document"):
             for i, text in enumerate(texts):
                 documents.append(Document(page_content=text, type=types[i]))
     return documents
+
+
+def read_yaml(filepath):
+    try:
+        with open(filepath, encoding="utf-8") as fp:
+            result = yaml.load(fp, Loader=SafeLoader)
+    except Exception as e:
+        raise Exception(e)
+    return result
 
 
 def write_yaml(data, filepath, mode="w", encoding='utf-8'):
@@ -117,3 +119,26 @@ def read_json(filepath, mode='r', encoding='utf-8'):
     with open(filepath, mode, encoding=encoding) as fp:
         data = json.load(fp)
     return data
+
+
+def read_csv_document(filepath, **kwargs):
+    df = pd.read_csv(filepath, **kwargs)
+    data = df.to_dict(orient='records')  # list(dict)
+    return data
+
+
+def read_csv_memory(filepath, **kwargs):
+    df = pd.read_csv(filepath, **kwargs)
+    data = df.to_dict(orient='records')  # list(dict)
+    return data
+
+
+def read_toml(file_path):
+    with open(file_path, "r") as file:
+        toml_data = toml.load(file)
+    return toml_data
+
+
+def write_toml(data, file_path):
+    with open(file_path, "w") as file:
+        toml.dump(data, file)

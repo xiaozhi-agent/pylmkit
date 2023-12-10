@@ -1,5 +1,6 @@
 from abc import ABC
 import time
+import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
 import streamlit as st
@@ -34,8 +35,7 @@ class BaseMemory(object):
             self.memory_messages = st.session_state['memory']
 
     def add(self, role, content, refer=''):
-        """
-        role，human ai system
+        """ role，human ai system
         """
         if role in ['user', 'User', 'USER', 'human', 'Human', 'HUMAN']:
             role = self.human_prefix
@@ -50,14 +50,9 @@ class BaseMemory(object):
         if self.streamlit_web:  # streamlit rerun page, so need cache
             st.session_state['memory'] = self.memory_messages
 
-    def save(self, filepath):
+    def to_csv(self, filepath, index=False, **kwargs):
         data = self.memory_messages
-        if filepath.endswith('.json'):
-            write_json(data, filepath=filepath)
-        elif filepath.endswith('.yaml') or filepath.endswith('.yml'):
-            write_yaml(data, filepath=filepath)
-        else:
-            raise Exception(f"The file type is not supported")
+        pd.DataFrame(data).to_csv(filepath, index=index, **kwargs)
 
     def clear(self):
         self.memory_messages = []
@@ -113,29 +108,30 @@ class BaseKnowledgeBase(object):
         else:
             return document_as_dict(self.splitter_documents)
 
-    def save_loader_documents(self, filepath):
-        self._save(filepath=filepath, documents=self.documents)
+    def to_csv_loader(self, filepath, index=False, **kwargs):
+        data = document_as_dict(self.documents)
+        pd.DataFrame(data).to_csv(filepath, index=index, **kwargs)
 
-    def save_splitter_documents(self, filepath, splitter=None, chunk_size=500, chunk_overlap=100, **kwargs):
+    def to_csv_splitter(self,
+                        filepath,
+                        splitter=None,
+                        chunk_size=500,
+                        chunk_overlap=100,
+                        index=False,
+                        splitter_kwargs={},
+                        csv_kwargs={}
+                        ):
         if not self.splitter_documents:
             self.splitter_documents = self.split(splitter=splitter, chunk_size=chunk_size,
-                                                 chunk_overlap=chunk_overlap, **kwargs)
-        self._save(filepath=filepath, documents=self.splitter_documents)
+                                                 chunk_overlap=chunk_overlap, **splitter_kwargs)
+        data = document_as_dict(self.splitter_documents)
+        pd.DataFrame(data).to_csv(filepath, index=index, **csv_kwargs)
 
     def clear(self, mode='doc'):
         if mode == 'doc':
             self.documents = []
         else:
             self.splitter_documents = []
-
-    def _save(self, filepath, documents):
-        data = document_as_dict(documents)
-        if filepath.endswith('.json'):
-            write_json(data, filepath=filepath)
-        elif filepath.endswith('.yaml') or filepath.endswith('.yml'):
-            write_yaml(data, filepath=filepath)
-        else:
-            raise Exception(f"The file type is not supported")
 
     def _base(self, documents, is_return=True, return_mode='doc', extend=True):
         if extend:
@@ -154,35 +150,25 @@ class BaseKnowledgeBase(object):
                     return document_as_dict(documents)
 
 
-def load_memory(filepath):
-    if filepath.endswith('.json'):
-        data = read_json(filepath)
-    elif filepath.endswith('.yaml') or filepath.endswith('yml'):
-        data = read_yaml(filepath)
-    else:
-        raise Exception(f"The file type is not supported")
-    return data
-
-
-def load_multi_memory(path: str, suffixes=None, show_progress: bool = True):
-    data = []
-    if suffixes is None:
-        suffixes = [".yaml", '.json']
-    if show_progress:
-        for suffixe in tqdm(suffixes):
-            for filepath in tqdm(list(Path(path).rglob(f"*{suffixe}"))):
-                try:
-                    data += load_memory(filepath)
-                except Exception as e:
-                    raise e
-    else:
-        for suffixe in suffixes:
-            for filepath in list(Path(path).rglob(f"*{suffixe}")):
-                try:
-                    data += load_memory(filepath)
-                except Exception as e:
-                    raise e
-    return data
+# def load_multi_memory(path: str, suffixes=None, show_progress: bool = True):
+#     data = []
+#     if suffixes is None:
+#         suffixes = [".yaml", '.json']
+#     if show_progress:
+#         for suffixe in tqdm(suffixes):
+#             for filepath in tqdm(list(Path(path).rglob(f"*{suffixe}"))):
+#                 try:
+#                     data += load_memory(filepath)
+#                 except Exception as e:
+#                     raise e
+#     else:
+#         for suffixe in suffixes:
+#             for filepath in list(Path(path).rglob(f"*{suffixe}")):
+#                 try:
+#                     data += load_memory(filepath)
+#                 except Exception as e:
+#                     raise e
+#     return data
 
 
 def input_widget(input1, input2, type, value):
@@ -304,13 +290,22 @@ class BaseWebUI(object):
                 with st.expander(label=self.refer_name, expanded=False):
                     st.markdown(refer, unsafe_allow_html=True)
 
-    def _input(self, content, role="user"):
-        st.chat_message(role).write(content, unsafe_allow_html=True)
+    def _input(self, content, role="user", avatar="😄"):
+        st.chat_message(role, avatar=avatar).write(content, unsafe_allow_html=True)
         msg = {"role": role, "content": content}
         st.session_state.messages.append(msg)
 
     def _output(self, content, refer=None, role="assistant"):
-        st.chat_message(role).write(content, unsafe_allow_html=True)
+        # st.chat_message(role).write(content, unsafe_allow_html=True)
+        with st.chat_message(role):
+            content_placeholder = st.empty()
+            full_content = ""
+            for chunk in content:
+                full_content += chunk + ""
+                time.sleep(0.01)
+                content_placeholder.markdown(full_content + "▌")
+            content_placeholder.markdown(full_content)
+
         if refer:  # refer setting
             with st.expander(label=self.refer_name, expanded=False):
                 st.markdown(refer, unsafe_allow_html=True)
@@ -346,12 +341,12 @@ class BaseWebUI(object):
             if prompt := st.chat_input(placeholder=self.placeholder):
                 self.input_kwargs[chat_variable] = prompt
                 self._input(content=prompt)
-                with st.spinner('pylmkit: Generating, please wait...'):  # 正在生成，请稍候...
+                with st.spinner('PyLMKit: Generating, please wait...'):  # 正在生成，请稍候...
                     result = obj(**self.input_kwargs)
                     response, refer = self.output_parse(output_param, result)
                     self._output(content=response, refer=refer)
         else:
-            with st.spinner('pylmkit: Generating, please wait...'):  # 正在生成，请稍候...
+            with st.spinner('PyLMKit: Generating, please wait...'):  # 正在生成，请稍候...
                 result = obj(**self.input_kwargs)
                 response, refer = self.output_parse(output_param, result)
                 # self._output(content=response, refer=refer)

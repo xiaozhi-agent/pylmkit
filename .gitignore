@@ -4,6 +4,7 @@
 /.idea
 .ipynb_checkpoints
 flash-attention/
+pylmkit/web/PyLMKit_RAG/
 
 ## Dependency directory
 ## Commenting this out is preferred by some people, see
@@ -22,7 +23,7 @@ setup.py
 *test.py
 *test
 tes
-*.env
+.env
 *.json
 *.mp3
 *.wav
