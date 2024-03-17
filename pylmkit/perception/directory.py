@@ -16,7 +16,6 @@ from langchain.document_loaders.base import BaseLoader
 from langchain.document_loaders.html_bs import BSHTMLLoader
 from langchain.document_loaders.text import TextLoader
 from langchain.document_loaders.unstructured import UnstructuredFileLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter, TextSplitter
 
 FILE_LOADER_TYPE = Union[
     Type[UnstructuredFileLoader], Type[TextLoader], Type[BSHTMLLoader]

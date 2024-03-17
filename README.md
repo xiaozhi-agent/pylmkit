@@ -49,8 +49,65 @@ pip install -U pylmkit
 
 ![PyLMKit RAG](./docs/images/RAG.png)
 
-- 其他功能正在更新中……
+- 3.长文本摘要提取：支持短文本、长文本摘要提取。
 
+  - 单个文本摘要提取：summary
+  - 批量文本摘要提取：batch_summary
+
+样例如下：
+```python
+import os
+from pylmkit.llms import ChatQianfan
+from pylmkit.app import summary, batch_summary
+
+
+# 百度
+os.environ['qianfan_ak'] = ""
+os.environ['qianfan_sk'] = ""
+os.environ['model'] = ""
+
+
+def worker(chunk):
+    return model.invoke(f"提取下面内容的摘要：\n\ncontent: {chunk}")
+
+
+model = ChatQianfan()
+text = """
+对话机器人 ChatGLM（alpha 内测版：QAGLM），这是一个初具问答和对话功能的千亿中
+英语言模型， 并针对中文进行了优化，现已开启邀请制内测，后续还会逐步扩大内测范围。
+与此同时，继开源 GLM-130B 千亿基座模型之后，我们正式开源最新的中英双语对话 GLM 模
+型： ChatGLM-6B，结合模型量化技术，用户可以在消费级的显卡上进行本地部署（INT4 量
+化级别下最低只需 6GB 显存）。经过约 1T 标识符的中英双语训练，辅以监督微调、 反馈自
+助、人类反馈强化学习等技术的加持，62 亿参数的 ChatGLM-6B 虽然规模不及千亿模型，但
+大大降低了用户部署的门槛，并且已经能生成相当符合人类偏好的回答。
+"""
+# 单个文本摘要：支持短文本、长文本摘要提取
+summary1 = summary(text,
+                   worker,
+                   max_chunk_size=1000,  # 当大于最大长度时，将采用分段提取摘要，然后在汇总摘要
+                   show_progress=True,  # 进度条
+                   max_summary_size=500,  # 当汇总后的摘要长度大于最大长度时，将采用分段提取摘要，然后在汇总摘要
+                   max_workers=5  # 最大线程数
+                   )
+print(summary1)
+
+# 批量文本摘要：支持短文本、长文本摘要提取
+summary2 = batch_summary(
+    texts=[text[:int(len(text)/2)], text[int(len(text)/2):]],
+    worker=worker,
+    max_chunk_size=1000,  # 当大于最大长度时，将采用分段提取摘要，然后在汇总摘要
+    show_progress=True,  # 进度条
+    max_summary_size=500,  # 当汇总后的摘要长度大于最大长度时，将采用分段提取摘要，然后在汇总摘要
+    max_workers=5  # 最大线程数
+)
+print(summary2)
+
+```
+
+
+- 4.数据库agents，更新中
+
+- 5.其它功能更新中
 
 ## 快速开始
 

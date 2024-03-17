@@ -1,13 +1,7 @@
-from abc import ABC
-
-from typing import Any, Optional, Union, Sequence, Dict
-from pylmkit.perception.directory import DirectoryLoader
-from pylmkit.perception.directory import UnstructuredFileLoader
-from langchain.document_loaders import WebBaseLoader
-from pylmkit.utils.data_utils import text_as_document, dict_as_document, document_as_dict
-from pylmkit.core.base import BaseKnowledgeBase
-from pylmkit.perception.directory import RecursiveCharacterTextSplitter
 from pathlib import Path
+from pylmkit.core.base import BaseKnowledgeBase
+from typing import Any, Optional, Union, Sequence, Dict
+from pylmkit.utils.data_utils import text_as_document, dict_as_document, document_as_dict
 
 
 class Text2Document(BaseKnowledgeBase):
@@ -45,6 +39,7 @@ class BaseSplitter(BaseKnowledgeBase):
 
     def __init__(self, splitter=None, chunk_size=500, chunk_overlap=100, **kwargs):
         if splitter is None:
+            from pylmkit.perception.directory import RecursiveCharacterTextSplitter
             self.splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap, **kwargs)
         else:
             self.splitter = splitter
@@ -91,6 +86,7 @@ class WebLoader(BaseKnowledgeBase):
                  init_documents=None,
                  **kwargs
                  ):
+        from langchain.document_loaders import WebBaseLoader
         super().__init__(init_documents=init_documents)
         data = WebBaseLoader(web_path=path,
                              default_parser=default_parser,
@@ -140,6 +136,8 @@ class DocumentLoader(BaseKnowledgeBase):
                  init_documents=None,
                  **kwargs
                  ):
+        from pylmkit.perception.directory import DirectoryLoader
+        from pylmkit.perception.directory import UnstructuredFileLoader
         super().__init__(init_documents=init_documents)
         if loader_kwargs is None:
             loader_kwargs = {}

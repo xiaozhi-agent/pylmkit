@@ -4,13 +4,9 @@ import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
 import streamlit as st
-from pydantic import Field, BaseModel
 from pylmkit.utils.data_utils import read_yaml, read_json, write_yaml, write_json
 from pylmkit.utils.data_utils import message_as_string, document_as_dict, dict_as_document
-from typing import Any, List, Optional, Type, Union, Sequence, Literal
-from pylmkit.perception.directory import BaseLoader
 from pylmkit.utils.data_utils import text_as_document
-from pylmkit.perception.directory import RecursiveCharacterTextSplitter
 from functools import partial
 from pylmkit.core.html import init_css, init_footer, init_logo
 from pylmkit.core.html import _zh, _en
@@ -99,6 +95,7 @@ class BaseKnowledgeBase(object):
 
     def split(self, splitter=None, chunk_size=500, chunk_overlap=100, return_mode='doc', **kwargs):
         if splitter is None:
+            from pylmkit.perception.directory import RecursiveCharacterTextSplitter
             splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap, **kwargs)
         else:
             splitter = splitter
@@ -148,27 +145,6 @@ class BaseKnowledgeBase(object):
                     return documents
                 else:
                     return document_as_dict(documents)
-
-
-# def load_multi_memory(path: str, suffixes=None, show_progress: bool = True):
-#     data = []
-#     if suffixes is None:
-#         suffixes = [".yaml", '.json']
-#     if show_progress:
-#         for suffixe in tqdm(suffixes):
-#             for filepath in tqdm(list(Path(path).rglob(f"*{suffixe}"))):
-#                 try:
-#                     data += load_memory(filepath)
-#                 except Exception as e:
-#                     raise e
-#     else:
-#         for suffixe in suffixes:
-#             for filepath in list(Path(path).rglob(f"*{suffixe}")):
-#                 try:
-#                     data += load_memory(filepath)
-#                 except Exception as e:
-#                     raise e
-#     return data
 
 
 def input_widget(input1, input2, type, value):
