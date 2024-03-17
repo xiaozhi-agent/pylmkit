@@ -49,7 +49,7 @@ pip install -U pylmkit
 
 ![PyLMKit RAG](./docs/images/RAG.png)
 
-- 3.长文本摘要提取：支持短文本、长文本摘要提取。
+- 3.长文本摘要提取：支持短文本、长文本摘要提取。2024-3-16 更新
 
   - 单个文本摘要提取：summary
   - 批量文本摘要提取：batch_summary
