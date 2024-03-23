@@ -12,6 +12,7 @@ from pylmkit.core.html import init_css, init_footer, init_logo
 from pylmkit.core.html import _zh, _en
 
 
+
 class BaseMemory(object):
     human_prefix: str = "Human"
     ai_prefix: str = "AI"
@@ -95,7 +96,7 @@ class BaseKnowledgeBase(object):
 
     def split(self, splitter=None, chunk_size=500, chunk_overlap=100, return_mode='doc', **kwargs):
         if splitter is None:
-            from pylmkit.perception.directory import RecursiveCharacterTextSplitter
+            from langchain.text_splitter import RecursiveCharacterTextSplitter
             splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap, **kwargs)
         else:
             splitter = splitter
@@ -364,5 +365,14 @@ class BaseWebUI(object):
             st.markdown(init_logo.format(**self.logo2), unsafe_allow_html=True)
         if self.logo1:
             st.markdown(init_logo.format(**self.logo1), unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
 
 
