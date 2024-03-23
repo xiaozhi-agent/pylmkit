@@ -15,7 +15,7 @@ pip install -U pylmkit
 我的第一句话是{query}
 ```
 
-<img src="./docs/images/RolePlay.png" width="500" height="260" alt="PyLMKit RAG">
+<img src="./docs/images/RolePlay.png" width="500" height="260" alt="PyLMKit RAG" style="display: block; margin-left: auto; margin-right: auto;">
 
 ## RAG
 RAG（Retrieval-Augmented Generation，检索增强生成）是一种利用知识库检索的方法，提供与用户查询相关的内容，从而增强模型答案的准确性和特异性。RAG包括本地知识库、基于网络的知识库、记忆知识库和数据库知识库。
@@ -26,7 +26,7 @@ RAG（Retrieval-Augmented Generation，检索增强生成）是一种利用知�
 - 基于数据库的知识库DBRAG
 - 基于记忆的知识库MemoryRAG
 
-<img src="./docs/images/RAG.png" width="500" height="260" alt="PyLMKit RAG">
+<img src="./docs/images/RAG.png" width="500" height="260" alt="PyLMKit RAG" style="display: block; margin-left: auto; margin-right: auto;">
 
 
 ## 长文本摘要
@@ -175,7 +175,7 @@ streamlit run demo.py
 ```
 默认会打开浏览器网页，也可以通过网址访问： [http://localhost:8501/](http://localhost:8501/)
 
-<img src="./docs/images/RP-Web.png" width="600" height="450" alt="PyLMKit RAG">
+<img src="./docs/images/RP-Web.png" width="600" height="450" alt="PyLMKit RAG" style="display: block; margin-left: auto; margin-right: auto;">
 
 ## 本地部署模型
 安装 `modelscope` 依赖包
@@ -194,7 +194,9 @@ LocalLLMModel(model_path='Qwen/Qwen-1_8B-Chat',  # 模型名称
 )
 ```
 下载好的效果如下：
-![local_model_download.png](./docs/images/local_model_download.png)
+
+<img src="./docs/images/local_model_download.png" width="500" height="320" alt="" style="display: block; margin-left: auto; margin-right: auto;">
+
 
 **（1）将下载模型及文件拷贝到自己想要的位置**
 一般采用上述下载方式，模型都会下载缓存到 `C` 盘，缓存的位置一般在：`C:\Users\你的用户名\.cache\modelscope\hub`，将刚刚下载的`qwen/Qwen-1_8B-Chat`文件夹剪切保存到 `D:/mycode_llm/` （这里举个例子，可以自定义）路径下，主要避免文件太大占满 `C` 盘。
@@ -203,7 +205,7 @@ LocalLLMModel(model_path='Qwen/Qwen-1_8B-Chat',  # 模型名称
 这一步骤很重要，一方面要保证你的`CUDA`环境配置正确、内存足够，即硬件资源得够（当然，CPU环境也可以跑一些模型）；另一方面则需要到开源模型的github或者根据其它教程，安装依赖包和推理加速等依赖文件。
 一般在下载的模型文件夹里，会有一个`README.md`文件，这是一个关于模型基本信息和安装的说明书，不懂安装依赖库的同学可以详细参照着这个教程来安装，比如`Qwen/Qwen-1_8B-Chat`文件夹内容截图如下：
 
-![local_model_readme.png](./docs/images/local_model_readme.png)
+<img src="./docs/images/local_model_readme.png" width="500" height="350" alt="" style="display: block; margin-left: auto; margin-right: auto;">
 
 这个步骤做好了，下一步骤才能正确运行模型，避免遇到大量BUG，那么这个时候就需要一个一个排查和解决。
 ### 本地模型部署
@@ -228,7 +230,8 @@ for i in res:
     print(">>>stream ", i)
 ```
 效果如下
-![local_model_output.png](./docs/images/local_model_output.png)
+
+<img style="display: block; margin-left: auto; margin-right: auto;" src="./docs/images/local_model_output.png" width="500" height="350" alt="">
 
 ### 对话网页Web
 角色扮演应用的样例，文件名为demo.py
