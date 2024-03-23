@@ -1,50 +1,41 @@
 import os
-import zhipuai
+from zhipuai import ZhipuAI
 
 
 class ChatZhipu(object):
-    def __init__(self, zhipu_apikey="", model="chatglm_turbo", temperature=0.95, top_p=0.7, incremental=True):
-        zhipuai.api_key = os.environ.get("zhipu_apikey", zhipu_apikey)
+    def __init__(self, zhipu_apikey="", model="glm-4", temperature=0.95, top_p=0.7):
+        self.api_key = os.environ.get("zhipu_apikey", zhipu_apikey)
         self.model = model
         self.temperature = temperature
         self.top_p = top_p
-        self.incremental = incremental
 
-    def invoke(self, query, **kwargs):
-        response = zhipuai.model_api.invoke(
-            prompt=[{"role": "user", "content": query}],
-            model=self.model,
+    def invoke(self, query, system_prompt="You need to answer user questions", **kwargs):
+        client = ZhipuAI(api_key=self.api_key)  # 请填写您自己的APIKey
+        response = client.chat.completions.create(
+            model=self.model,  # 填写需要调用的模型名称
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": query}
+            ],
+            stream=False,
             temperature=self.temperature,
             top_p=self.top_p,
-            incremental=self.incremental,
             **kwargs
         )
-        return response['data']['choices'][0]['content']
+        return response.choices[0].message.content
 
-    def stream(self, query, **kwargs):
-        response = zhipuai.model_api.sse_invoke(
-            prompt=[{"role": "user", "content": query}],
-            model=self.model,
+    def stream(self, query, system_prompt="You need to answer user questions", **kwargs):
+        client = ZhipuAI(api_key=self.api_key)  # 请填写您自己的APIKey
+        response = client.chat.completions.create(
+            model=self.model,  # 填写需要调用的模型名称
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": query}
+            ],
+            stream=True,
             temperature=self.temperature,
             top_p=self.top_p,
-            incremental=self.incremental,
             **kwargs
         )
-        '''
-          说明：
-          add: 事件流开启
-          error: 平台服务或者模型异常，响应的异常事件
-          interrupted: 中断事件，例如：触发敏感词
-          finish: 数据接收完毕，关闭事件流
-        '''
-        for event in response.events():
-            if event.event == "add":
-                yield event.data
-            elif event.event == "error" or event.event == "interrupted":
-                yield event.data
-            elif event.event == "finish":
-                yield event.data
-                yield event.meta
-            else:
-                yield event.data
-
+        for chunk in response:
+            yield chunk.choices[0].delta.content

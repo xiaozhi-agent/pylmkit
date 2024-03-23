@@ -1,5 +1,9 @@
 # PyLMKit
+
 **pylmkit** 是一个旨在构建或集成具有实用价值的大模型（LM）应用程序的项目，旨在帮助用户快速、灵活、有针对性地构建符合其业务需求。
+
+# 教程文档
+<a href="https://www.yuque.com/txhy/pylmkit" target="_blank">PyLMKit使用教程</a>
 
 # 1.快速安装
 ```bash
