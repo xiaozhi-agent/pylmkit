@@ -14,7 +14,8 @@ pip install -U pylmkit
 我想让你充当英语翻译员、拼写纠正员和改进员。我会用任何语言与你交谈，你会检测语言，翻译它并用我的文本的更正和改进版本用英语回答。我希望你用更优美优雅的高级英语单词和句子替换我简化的 A0 级单词和句子。保持相同的意思，但使它们更文艺。我要你只回复更正、改进，不要写任何解释。
 我的第一句话是{query}
 ```
-![PyLMKit RolePlay](./docs/images/RolePlay.png)
+
+<img src="./docs/images/RolePlay.png" width="500" height="260" alt="PyLMKit RAG">
 
 ## RAG
 RAG（Retrieval-Augmented Generation，检索增强生成）是一种利用知识库检索的方法，提供与用户查询相关的内容，从而增强模型答案的准确性和特异性。RAG包括本地知识库、基于网络的知识库、记忆知识库和数据库知识库。
@@ -25,7 +26,8 @@ RAG（Retrieval-Augmented Generation，检索增强生成）是一种利用知�
 - 基于数据库的知识库DBRAG
 - 基于记忆的知识库MemoryRAG
 
-![PyLMKit RAG](./docs/images/RAG.png)
+<img src="./docs/images/RAG.png" width="500" height="260" alt="PyLMKit RAG">
+
 
 ## 长文本摘要
 在一些长篇幅、长文本场景下，由于模型本身或硬件资源受限而无法一次性处理长文本，因此需要通过`分而治之`的思想进行长文本摘要提取。
@@ -172,7 +174,8 @@ web.run(
 streamlit run demo.py
 ```
 默认会打开浏览器网页，也可以通过网址访问： [http://localhost:8501/](http://localhost:8501/)
-![PyLMKit RAG](./docs/images/RP-Web.png)
+
+<img src="./docs/images/RP-Web.png" width="600" height="450" alt="PyLMKit RAG">
 
 ## 本地部署模型
 安装 `modelscope` 依赖包
