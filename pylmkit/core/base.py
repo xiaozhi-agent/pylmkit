@@ -1,5 +1,5 @@
 from abc import ABC
-import time
+import time, logging
 import pandas as pd
 from pathlib import Path
 from tqdm import tqdm
@@ -10,7 +10,10 @@ from pylmkit.utils.data_utils import text_as_document
 from functools import partial
 from pylmkit.core.html import init_css, init_footer, init_logo
 from pylmkit.core.html import _zh, _en
-
+from pylmkit.core.parse import CodeBlockParse
+from pylmkit.utils.db_base import DBConnector
+from pylmkit.core.prompt import sql_prompt, sql_qa_prompt
+logger = logging.getLogger(__name__)
 
 
 class BaseMemory(object):
@@ -203,6 +206,42 @@ def generate_input_widget(mode="main", **kwargs):  # 在前端生成输入框
             )
 
 
+class BaseChatRunnable(object):
+    def __init__(self, model, connector):
+        self.model = model
+        self.connector = connector
+        self.sql_prompt = sql_prompt
+        self.sql_qa_prompt = sql_qa_prompt
+
+    def runnable(self, query, max_rollback_num: int = 5, code_type: str = 'sql'):
+        runnable_results = {"status": False, "query": None, "result": None, 'error': None}
+        try:
+            if max_rollback_num != 0:
+                model_respond = self.model.invoke(query)
+                model_respond = model_respond if isinstance(model_respond, str) else model_respond.content
+                code_query = CodeBlockParse().base(model_respond, code_type)
+                if code_query['status']:
+                    runnable_results['query'] = code_query['output']
+                    code_result = self.connector.run(code_query['output'])  # sql [(列名),(数值记录)]
+                    if code_result['status']:
+                        runnable_results['result'] = code_result['output']
+                        runnable_results['status'] = True
+                        return runnable_results
+                    else:
+                        logging.info('Run error，RollBack...')
+                        return self.runnable(query, max_rollback_num-1, code_type)
+                else:
+                    logging.info('Generate error，RollBack...')
+                    return self.runnable(query, max_rollback_num-1, code_type)
+            else:
+                return runnable_results
+        except Exception as e:
+            # 这里可以添加更详细的错误处理逻辑
+            logger.info("Try error: " + str(e))
+            runnable_results['error'] = str(e)
+            return runnable_results
+
+
 class BaseWebUI(object):
     def __init__(self,
                  title=None,
@@ -277,7 +316,7 @@ class BaseWebUI(object):
         with st.chat_message(role):
             content_placeholder = st.empty()
             full_content = ""
-            for chunk in content:
+            for chunk in str(content):
                 full_content += chunk + ""
                 time.sleep(0.01)
                 content_placeholder.markdown(full_content + "▌")
@@ -357,10 +396,10 @@ class BaseWebUI(object):
         st.markdown(init_css, unsafe_allow_html=True)
         if self.footer_describe:
             st.sidebar.markdown(init_footer.format(self.footer_describe), unsafe_allow_html=True)
-        if self.sidebar_title:
-            st.sidebar.title(self.sidebar_title)
-        if self.sidebar_describe:
-            st.sidebar.markdown(self.sidebar_describe, unsafe_allow_html=True)
+        # if self.sidebar_title:
+        #     st.sidebar.title(self.sidebar_title)
+        # if self.sidebar_describe:
+        #     st.sidebar.markdown(self.sidebar_describe, unsafe_allow_html=True)
         if self.logo2:
             st.markdown(init_logo.format(**self.logo2), unsafe_allow_html=True)
         if self.logo1:

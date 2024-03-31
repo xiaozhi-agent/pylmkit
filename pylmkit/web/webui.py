@@ -1,4 +1,5 @@
 from pylmkit.app import RolePlay
+import streamlit as st
 from pylmkit.core.base import BaseWebUI
 
 
@@ -31,5 +32,17 @@ class RAGWebUI(BaseWebUI):
             placeholder=placeholder,
             refer_name=refer_name
         )
+
+
+class ChatDBWebUI(BaseWebUI):
+    def __init__(self,
+                 language='zh',
+                 **kwargs
+                 ):
+
+        super().__init__(language=language, **kwargs)
+        st.sidebar.title('ChatDB')
+        st.sidebar.markdown("与你的结构化数据聊天：支持主流数据库、表格型excel等数据！")
+
 
 

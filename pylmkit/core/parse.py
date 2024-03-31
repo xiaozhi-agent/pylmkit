@@ -22,6 +22,12 @@ class CodeBlockParse(object):
         if f'```{code_type}' in code_text and '```' in code_text:
             code_result['output'] = str(code_text).split(f'```{code_type}')[1].split('```')[0]
             code_result['status'] = True
+            if code_type == 'sql':
+                code_result['output'] = code_result['output'].replace('\n', ' ').strip()
+            elif code_type == 'python':
+                pass
+            elif code_type == 'json':
+                code_result['output'] = code_result['output'].replace(' ', '')
         else:
             code_result['error'] = f'不存在代码块格式：```{code_type}\n```'
         return code_result

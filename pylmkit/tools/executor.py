@@ -5,7 +5,6 @@ import sys
 from io import StringIO
 from typing import Dict, Optional
 from pydantic import Field, BaseModel
-
 logger = logging.getLogger(__name__)
 
 
@@ -53,13 +52,10 @@ class PythonREPL(BaseModel):
             p = multiprocessing.Process(
                 target=self.worker, args=(command, self.globals, self.locals, queue)
             )
-
             # start it
             p.start()
-
             # wait for the process to finish or kill it after timeout seconds
             p.join(timeout)
-
             if p.is_alive():
                 p.terminate()
                 return "Execution timed out"
@@ -73,16 +69,18 @@ class Executor(object):
     def __init__(self):
         pass
 
-    def run_python(self, code_text: str, timeout: Optional[int] = None):
+    @classmethod
+    def run_python(cls, code_text: str, timeout: Optional[int] = None):
         results = {'output': None, "status": False, "error": None}
         try:
             results['output'] = PythonREPL().run(command=code_text, timeout=timeout)
             results['status'] = True
         except Exception as e:
             results['error'] = str(e)
-        return
+        return results
 
-    def run_mysql(self, connect, code_text):
+    @classmethod
+    def run_mysql(cls, connect, code_text):
         results = {'output': {"data": None, "columns": []}, "status": False, "error": None}
         with connect.cursor() as cursor:
             try:
@@ -95,3 +93,8 @@ class Executor(object):
             except Exception as e:
                 results['error'] = str(e)
         return results
+
+
+
+
+

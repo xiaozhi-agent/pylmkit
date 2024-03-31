@@ -22,6 +22,7 @@ dist
 setup.py
 *test.py
 *test
+test_datasets
 tes
 .env
 *.json

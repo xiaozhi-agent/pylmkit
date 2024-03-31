@@ -1,5 +1,6 @@
 import re
 import inspect
+from .executor import Executor
 
 
 def tool(func):
@@ -27,3 +28,10 @@ def tool(func):
     func.all = f"{name}: {name}{describe}"
     return func
 
+
+@tool
+def write_python_run(code_block):
+    """请写一段Python程序代码内容如下:\n {question}\n 特别注意：必须返回完整的代码,并保持格式正确,且只能返回代码块"""
+
+    results = Executor().run_python(code_block)
+    return results

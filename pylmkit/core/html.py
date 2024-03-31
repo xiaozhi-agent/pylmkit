@@ -76,26 +76,20 @@ init_logo = '''
 _zh = input_prompt(
     _title="PyLMKit",
     _page_icon="😄",
-    _sidebar_title="😄 PyLMKit",
+    _sidebar_title="PyLMKit",
     _refer_name="引用信息",
     _greetings="您好，我能为您做些什么?",
     _placeholder="请输入您的消息...",
     _footer_describe="Copyright © 2023 PyLMKit  |  Make with Streamlit",
     _sidebar_describe='''
-**pylmkit**: 帮助用户快速构建实用的大模型应用! [pylmkit](https://github.com/52phm/pylmkit)
-
-- 开源协议 <br>Apache License 2  [detail](https://www.apache.org/licenses/LICENSE-2.0)
-- 下载安装
+大模型应用框架！
 ```bash
 pip install pylmkit -U
 ```
-- 学习教程<br>
-    - [English document](http://en.pylmkit.cn) 
-    - [中文文档](http://zh.pylmkit.cn)
 ''',
     _logo1=input_prompt(
         logo_id="logo1",
-        link="http://app.pylmkit.cn",
+        link="https://www.yuque.com/txhy/pylmkit",
         logo_rul="https://img1.baidu.com/it/u=2672705872,739783853&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
         logo_title="pylmkit"
     ),
